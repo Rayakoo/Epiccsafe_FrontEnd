@@ -70,7 +70,7 @@ export default function MitigasiPage() {
                   </li>
                   <li className="flex items-center gap-2 text-[#E8EDF2]">
                     <span className="font-bold text-[#E8001D] text-[14px] md:text-[15px]">×</span>
-                    Domain baru < 30 hari
+                    Domain baru kurang dari 30 hari
                   </li>
                   <li className="flex items-center gap-2 text-[#E8EDF2]">
                     <span className="font-bold text-[#4CAF50] text-[13px] md:text-[14px]">✓</span>

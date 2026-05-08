@@ -10,22 +10,10 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  
-
   return (
     <div className="min-h-screen bg-[#0F1923] flex">
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
       {/* Sidebar */}
-      <aside className="w-[190px]
-        md:translate-x-0 md:static md:block
-      `}>
+      <aside className="w-[190px] bg-[#0B1520] border-r border-white/10 min-h-screen fixed left-0 top-0 flex flex-col z-50">
         <div className="bg-[#E8001D] p-4">
           <div className="text-white font-extrabold text-[13px] leading-tight">
             EPICCSAFE Admin
@@ -35,7 +23,7 @@ export default function AdminLayout({
           </div>
         </div>
 
-        <nav className="flex-1 p-3 flex flex-col gap-0.5 overflow-y-auto">
+        <nav className="flex-1 p-3 flex flex-col gap-0.5">
           <div className="text-[9.5px] font-bold text-[#6B7E93] tracking-[1.2px] uppercase px-2 pt-3 pb-1.5">
             Overview
           </div>
@@ -62,24 +50,8 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-h-screen md:ml-0">
-        {/* Mobile header with menu button */}
-        <div className="md:hidden bg-[#0B1520] border-b border-white/10 p-4 flex items-center justify-between sticky top-0 z-30">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-white p-1 rounded-lg hover:bg-white/10 transition-colors"
-          >
-            <svg width="20" viewBox="0 0 16 16" fill="none">
-              <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-          </button>
-          <div className="text-white font-bold text-[14px]">EPICCSAFE</div>
-          <div className="w-8" />
-        </div>
-
-        <div className="flex-1 p-4 md:p-6 lg:p-8">
-          {children}
-        </div>
+      <div className="ml-[190px] flex-1 flex flex-col min-h-screen">
+        {children}
       </div>
     </div>
   );
