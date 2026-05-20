@@ -4,7 +4,9 @@ import { useSearchParams } from "next/navigation";
 
 export default function HasilClient() {
   const searchParams = useSearchParams();
-  const score = parseInt(searchParams.get("score") || "85");
+  const score = parseInt(searchParams.get("score") || "0");
+  const scannedUrl = searchParams.get("url") || "";
+  const conclusion = searchParams.get("conclusion") || "";
 
   const getColorConfig = (score: number) => {
     if (score < 30) {
@@ -101,6 +103,11 @@ export default function HasilClient() {
             Hasil Analisis AI
           </h1>
           <p className="text-[13px] md:text-[14.5px] text-white/60 text-center mb-2 md:mb-3">Berikut hasil deteksi otomatis dari sistem EPICCSAFE</p>
+          {scannedUrl && (
+            <p className="text-[11px] md:text-[12.5px] text-white/40 font-mono break-all max-w-full px-4 text-center">
+              {scannedUrl}
+            </p>
+          )}
 
           {/* Score Section */}
           <div className="w-full flex flex-col items-center gap-1.5 mb-2">
@@ -121,7 +128,7 @@ export default function HasilClient() {
           <div className={`w-full ${config.bgBanner} ${config.borderBanner} rounded-lg md:rounded-xl p-4 md:p-5 text-center flex flex-col gap-1.5 mt-2`}>
             <span className={`text-[13px] md:text-[15px] font-extrabold tracking-[0.08em] uppercase ${config.statusColor}`}>{config.statusText}</span>
             <p className="text-[13px] md:text-[14.5px] text-white/60 leading-relaxed">
-              {config.description}
+              {conclusion || config.description}
             </p>
           </div>
         </div>
@@ -131,7 +138,7 @@ export default function HasilClient() {
           <a href="/deteksi" className="no-underline text-white text-[14px] md:text-[16px] font-bold px-6 md:px-9 py-3 md:py-3.5 border-2 border-white/30 rounded-lg bg-transparent hover:bg-white/8 hover:border-white/50 transition-all w-full sm:w-auto text-center">
             Kembali
           </a>
-          <a href="/laporan" className="no-underline text-white text-[14px] md:text-[16px] font-bold px-6 md:px-9 py-3 md:py-3.5 rounded-lg bg-[#e03030] border-2 border-transparent hover:bg-[#ff4444] hover:-translate-y-0.5 transition-all w-full sm:w-auto text-center">
+          <a href={scannedUrl ? `/laporan?url=${encodeURIComponent(scannedUrl)}` : '/laporan'} className="no-underline text-white text-[14px] md:text-[16px] font-bold px-6 md:px-9 py-3 md:py-3.5 rounded-lg bg-[#e03030] border-2 border-transparent hover:bg-[#ff4444] hover:-translate-y-0.5 transition-all w-full sm:w-auto text-center">
             Laporkan
           </a>
         </div>

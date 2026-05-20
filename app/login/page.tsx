@@ -1,6 +1,38 @@
 'use client';
 
+import { useState } from 'react'
+import { signin } from '@/services/auth'
+import { ApiError } from '@/services/api'
+
 export default function LoginPage() {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  async function handleLogin() {
+    setLoading(true)
+    setError('')
+
+    try {
+      const res = await signin({ email, password })
+
+      if (res.user.is_admin) {
+        window.location.href = '/admin/dashboard'
+      } else {
+        setError('Akses ditolak: akun Anda tidak memiliki hak admin.')
+      }
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.detail)
+      } else {
+        setError('Login gagal. Periksa kembali email dan password.')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#8B0000] text-white overflow-hidden">
       {/* Top Left Logo - hidden on mobile */}
@@ -29,15 +61,25 @@ export default function LoginPage() {
 
             <div className="flex flex-col gap-5">
               <input
-                type="text"
-                placeholder="Enter Admin ID"
+                type="email"
+                placeholder="Email Admin"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 className="w-full bg-transparent border-b-2 border-[#b0a8a8] py-2.5 px-0 text-[#333] text-[15px] font-sans outline-none focus:border-[#8B0000] transition-colors"
               />
               <input
                 type="password"
                 placeholder="Password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
                 className="w-full bg-transparent border-b-2 border-[#b0a8a8] py-2.5 px-0 text-[#333] text-[15px] font-sans outline-none focus:border-[#8B0000] transition-colors"
               />
+
+              {error && (
+                <p className="text-[#E8001D] text-[13px] font-semibold text-center bg-[rgba(232,0,29,0.1)] rounded-lg py-2">
+                  {error}
+                </p>
+              )}
 
               <div className="flex justify-end mt-1 mb-5 md:mb-7">
                 <a href="#" className="text-[13.5px] font-bold text-[#8B0000] hover:opacity-75 hover:underline transition-opacity">
@@ -46,10 +88,11 @@ export default function LoginPage() {
               </div>
 
               <button
-                onClick={() => window.location.href = '/admin/dashboard'}
-                className="w-full bg-[#6B0000] text-white py-3.5 md:py-4 rounded-full text-[15px] font-extrabold tracking-[1.5px] cursor-pointer hover:bg-[#8B0000] hover:-translate-y-0.5 transition-all active:translate-y-0"
+                onClick={handleLogin}
+                disabled={loading}
+                className="w-full bg-[#6B0000] text-white py-3.5 md:py-4 rounded-full text-[15px] font-extrabold tracking-[1.5px] cursor-pointer hover:bg-[#8B0000] hover:-translate-y-0.5 transition-all active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                LOGIN
+                {loading ? 'Memproses...' : 'LOGIN'}
               </button>
             </div>
           </div>

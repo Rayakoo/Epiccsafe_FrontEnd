@@ -1,6 +1,39 @@
 'use client';
 
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { comprehensiveScan } from '@/services/scan'
+import { ApiError } from '@/services/api'
+
 export default function DeteksiPage() {
+  const router = useRouter()
+  const [url, setUrl] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  async function handleScan() {
+    if (!url.trim()) return
+    setLoading(true)
+    setError('')
+
+    try {
+      const res = await comprehensiveScan({ url })
+      const params = new URLSearchParams({
+        score: String(res.score),
+        url: res.url,
+        conclusion: res.conclusion,
+      })
+      router.push(`/hasil?${params}`)
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.detail)
+      } else {
+        setError('Gagal melakukan scan. Coba lagi.')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
   return (
     <div className="min-h-screen bg-[#140606] text-white relative">
       {/* Navbar */}
@@ -103,32 +136,34 @@ export default function DeteksiPage() {
                 <label className="text-[12.5px] md:text-[13.5px] font-semibold text-white/70">URL / Tautan yang Ingin Dicek</label>
                 <input
                   type="url"
-                  id="urlInput"
-                  className="w-full bg-white/7 border border-white/10 rounded-lg text-white font-sans text-[14px] p-3 outline-none focus:border-[#e03030] focus:bg-[rgba(224,48,48,0.05)] focus:shadow-[0_0_0_3px_rgba(224,48,48,0.12)] transition-all"
+                  value={url}
+                  onChange={e => setUrl(e.target.value)}
                   placeholder="https://tautan-mencurigakan.xyz/..."
+                  className="w-full bg-white/7 border border-white/10 rounded-lg text-white font-sans text-[14px] p-3 outline-none focus:border-[#e03030] focus:bg-[rgba(224,48,48,0.05)] focus:shadow-[0_0_0_3px_rgba(224,48,48,0.12)] transition-all"
                 />
               </div>
 
-              <div className="flex items-center gap-3">
-                <div className="flex-1 h-px bg-white/10"></div>
-                <span className="text-[11px] md:text-[12.5px] font-semibold text-white/38 whitespace-nowrap">Atau Teks Pesan (SMS/WA/Email)</span>
-                <div className="flex-1 h-px bg-white/10"></div>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <textarea
-                  id="pesanInput"
-                  className="w-full bg-white/7 border border-white/10 rounded-lg text-white font-sans text-[14px] p-3 outline-none h-[110px] resize-y leading-relaxed focus:border-[#e03030] focus:bg-[rgba(224,48,48,0.05)] focus:shadow-[0_0_0_3px_rgba(224,48,48,0.12)] transition-all"
-                  rows={5}
-                  placeholder="Tempel teks pesan mencurigakan di sini..."
-                ></textarea>
-              </div>
+              {error && (
+                <div className="bg-[rgba(232,0,29,0.1)] border border-[rgba(232,0,29,0.25)] rounded-lg p-3 text-[13px] text-[#E8001D] font-semibold text-center">
+                  {error}
+                </div>
+              )}
 
               <button
-                id="btnAnalisis"
-                className="w-full bg-[#e03030] text-white font-sans text-[15px] md:text-[16px] font-bold rounded-lg p-3.5 md:p-4 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[#ff4444] hover:-translate-y-0.5 transition-all"
+                onClick={handleScan}
+                disabled={loading || !url.trim()}
+                className="w-full bg-[#e03030] text-white font-sans text-[15px] md:text-[16px] font-bold rounded-lg p-3.5 md:p-4 cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[#ff4444] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <span id="btnText">Analisis Sekarang</span>
+                {loading ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeDasharray="50" strokeDashoffset="20" strokeLinecap="round"/>
+                    </svg>
+                    Menganalisis...
+                  </>
+                ) : (
+                  <span>Analisis Sekarang</span>
+                )}
               </button>
             </div>
           </div>

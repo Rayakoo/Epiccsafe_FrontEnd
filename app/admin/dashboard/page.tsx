@@ -1,4 +1,21 @@
+'use client';
+
+import { useRouter } from 'next/navigation'
+import { signout } from '@/services/auth'
+
 export default function DashboardPage() {
+  const router = useRouter()
+
+  async function handleLogout() {
+    try {
+      await signout()
+    } catch {
+      // ignore
+    }
+    localStorage.removeItem('epiccsafe_user')
+    router.replace('/')
+  }
+
   return (
     <div className="flex-1 flex flex-col">
       {/* Topbar */}
@@ -8,7 +25,7 @@ export default function DashboardPage() {
           <div className="w-8.5 h-8.5 rounded-full bg-[#E8001D] flex items-center justify-center text-white text-sm font-bold">
             A
           </div>
-          <button className="px-3 md:px-4.5 py-1.5 rounded-lg border border-white/10 bg-transparent text-[#E8EDF2] text-[12px] md:text-[13px] font-semibold hover:bg-white/5 transition-colors">
+          <button onClick={handleLogout} className="px-3 md:px-4.5 py-1.5 rounded-lg border border-white/10 bg-transparent text-[#E8EDF2] text-[12px] md:text-[13px] font-semibold hover:bg-white/5 transition-colors cursor-pointer">
             Logout
           </button>
         </div>

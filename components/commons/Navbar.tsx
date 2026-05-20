@@ -1,20 +1,11 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 export default function Navbar() {
-  const [loginOpen, setLoginOpen] = useState(false);
   const [activeLang, setActiveLang] = useState("EN");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleClickOutside = () => setLoginOpen(false);
-    if (loginOpen) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
-  }, [loginOpen]);
 
   return (
     <nav className="sticky top-0 z-50 bg-[#2a0606] border-b border-white/7 h-[60px]">
@@ -56,23 +47,16 @@ export default function Navbar() {
             </svg>
           </button>
 
-          {/* Login wrapper */}
-          <div className="relative">
-            <button onClick={(e) => { e.stopPropagation(); setLoginOpen(!loginOpen); }} className="flex items-center gap-1.5 no-underline text-white text-[13px] font-semibold px-3 md:px-4 py-1.5 border-2 border-white/25 rounded-full hover:bg-white/10 hover:border-white/40 transition-all">
-              <span className="hidden sm:inline">Login</span>
-              <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0110 0v4"/>
-              </svg>
-            </button>
-            {loginOpen && (
-              <div className="absolute top-full right-0 mt-2.5 w-[220px] rounded-xl bg-[rgba(30,4,4,0.97)] backdrop-blur-[18px] border border-white/12 shadow-[0_20px_40px_rgba(0,0,0,0.5)] overflow-hidden z-9999">
-                <div className="text-[12px] font-style-italic opacity-75 px-4.5 py-3.5 border-b border-white/12 text-white">Select Login Type</div>
-                <Link href="/login/admin" className="block text-[13px] text-white/85 px-4.5 py-3.5 border-b border-white/7 hover:bg-white/10 hover:text-white hover:pl-6 transition-all">Admin Login</Link>
-                <Link href="/login/user" className="block text-[13px] text-white/85 px-4.5 py-3.5 hover:bg-white/10 hover:text-white hover:pl-6 transition-all">User Login</Link>
-              </div>
-            )}
-          </div>
+          <Link
+            href="/login"
+            className="flex items-center gap-1.5 no-underline text-white text-[13px] font-semibold px-3 md:px-4 py-1.5 border-2 border-white/25 rounded-full hover:bg-white/10 hover:border-white/40 transition-all"
+          >
+            <span className="hidden sm:inline">Admin Login</span>
+            <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0110 0v4"/>
+            </svg>
+          </Link>
 
           <div className="hidden sm:flex items-center bg-white/8 rounded-full px-2 gap-0.5 text-[12px] font-semibold">
             <span onClick={() => setActiveLang("ID")} className={`cursor-pointer px-2 py-1 rounded-full ${activeLang === "ID" ? "bg-white/15 text-white" : "opacity-60 hover:opacity-100"} transition-opacity`}>ID</span>

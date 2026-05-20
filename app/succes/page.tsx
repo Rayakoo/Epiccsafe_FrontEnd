@@ -1,5 +1,22 @@
 'use client';
-export default function SuccesPage() {
+
+import { Suspense, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+
+function SuccesContent() {
+  const searchParams = useSearchParams()
+  const ticketId = searchParams.get('ticket_id') || '#TIC-2026-975'
+  const riskScore = parseInt(searchParams.get('risk_score') || '0')
+  const scannedUrl = searchParams.get('url') || ''
+  const [copied, setCopied] = useState(false)
+
+  const getColor = (score: number) => {
+    if (score > 70) return { text: 'text-[#E8001D]', bg: 'bg-[#E8001D]', bar: 'bg-[#E8001D]', label: 'Berisiko Tinggi' }
+    if (score > 30) return { text: 'text-[#F5A623]', bg: 'bg-[#F5A623]', bar: 'bg-[#F5A623]', label: 'Mencurigakan' }
+    return { text: 'text-[#22c55e]', bg: 'bg-[#22c55e]', bar: 'bg-[#22c55e]', label: 'Aman' }
+  }
+  const color = getColor(riskScore)
+
   return (
     <div className="min-h-screen bg-[#1A0A0A] text-[#F0E8E8] flex flex-col">
       {/* Navbar */}
@@ -62,31 +79,49 @@ export default function SuccesPage() {
         <h1 className="text-2xl md:text-3xl font-extrabold text-white text-center leading-relaxed">Laporan Berhasil Dikirim!</h1>
         <p className="text-[13px] md:text-[14px] text-[#9E8080] text-center mt-[-8px] md:mt-[-12px]">Sistem sedang memproses laporan kamu secara otomatis</p>
 
-        {/* Ticket Card */}
-        <div className="w-full bg-[#2C2C2C] border border-white/6 rounded-xl p-5 md:p-7">
-          <p className="text-[10px] md:text-[11px] font-bold tracking-[1.5px] text-[#9E8080] uppercase mb-2">Ticket ID Kamu</p>
-          <p className="font-mono text-[28px] md:text-[34px] font-semibold text-[#E8001D] tracking-[1px] mb-2">#TIC-2026-975</p>
-          <p className="text-[12px] md:text-[13px] text-[#9E8080]">Simpan ID ini untuk melacak status laporanmu</p>
-        </div>
-
-        {/* AI Card */}
+        {/* Risk Score Card */}
         <div className="w-full bg-[#2C2C2C] border border-white/6 rounded-xl p-5 md:p-7">
           <div className="flex items-start justify-between mb-3 md:mb-4">
             <div>
               <p className="text-[15px] md:text-[17px] font-bold text-white">Initial AI Response</p>
               <p className="text-[12px] md:text-[13px] text-[#9E8080] mt-0.5">Deteksi otomatis real-time</p>
             </div>
-            <span className="font-mono text-[24px] md:text-[28px] font-semibold text-white">80</span>
+            <span className={`font-mono text-[24px] md:text-[28px] font-semibold ${color.text}`}>{riskScore}</span>
           </div>
           <div className="mb-3 md:mb-4">
             <div className="w-full h-2 md:h-2.5 bg-white/12 rounded-full overflow-hidden">
-              <div className="h-full bg-[#E8001D] rounded-full w-[80%] transition-all duration-1000"></div>
+              <div className={`h-full ${color.bar} rounded-full transition-all duration-1000`} style={{ width: `${riskScore}%` }}></div>
             </div>
           </div>
-          <div className="bg-[rgba(139,0,0,0.35)] border border-[rgba(232,0,29,0.35)] rounded-xl p-3 md:p-3.5">
-            <p className="text-[14px] md:text-[15px] font-bold text-[#E8001D] mb-1">Status: Berisiko Tinggi</p>
-            <p className="text-[12px] md:text-[13px] text-[rgba(240,232,232,0.8)]">Laporan kamu langsung masuk antrian prioritas tim keamanan.</p>
+          <div className={`bg-[rgba(139,0,0,0.35)] border ${color.bg.replace('text-', 'border-').replace('[#', '[rgba(') || 'border-[rgba(232,0,29,0.35)]'} rounded-xl p-3 md:p-3.5`}
+            style={{ backgroundColor: riskScore > 70 ? 'rgba(232,0,29,0.35)' : riskScore > 30 ? 'rgba(245,166,35,0.2)' : 'rgba(34,197,94,0.15)', borderColor: riskScore > 70 ? 'rgba(232,0,29,0.35)' : riskScore > 30 ? 'rgba(245,166,35,0.3)' : 'rgba(34,197,94,0.3)' }}>
+            <p className={`text-[14px] md:text-[15px] font-bold ${color.text} mb-1`}>Status: {color.label}</p>
+            <p className="text-[12px] md:text-[13px] text-[rgba(240,232,232,0.8)]">{scannedUrl || 'Laporan kamu langsung masuk antrian prioritas tim keamanan.'}</p>
           </div>
+        </div>
+
+        {/* Ticket Card */}
+        <div className="w-full bg-[#2C2C2C] border border-white/6 rounded-xl p-5 md:p-7 flex flex-col items-center gap-3">
+          <p className="text-[10px] md:text-[11px] font-bold tracking-[1.5px] text-[#9E8080] uppercase">Ticket ID Kamu</p>
+          <p className="font-mono text-[28px] md:text-[34px] font-semibold text-[#E8001D] tracking-[1px]">{ticketId}</p>
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(ticketId)
+              setCopied(true)
+              setTimeout(() => setCopied(false), 2000)
+            }}
+            className="flex items-center gap-1.5 text-xs font-semibold transition-all cursor-pointer bg-transparent border rounded-lg px-3 py-1.5"
+            style={{
+              color: copied ? '#22c55e' : 'rgba(255,255,255,0.5)',
+              borderColor: copied ? 'rgba(34,197,94,0.4)' : 'rgba(255,255,255,0.1)',
+            }}
+          >
+            <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+            </svg>
+            {copied ? 'Tersalin!' : 'Salin Ticket ID'}
+          </button>
         </div>
 
         {/* Email Card */}
@@ -95,7 +130,7 @@ export default function SuccesPage() {
           <div className="bg-[#1E1E1E] p-4 flex flex-col gap-1">
             <p className="text-[13px] md:text-[14px] font-bold text-white">Laporan Phishing Anda Telah Diterima</p>
             <p className="text-[12px] md:text-[13px] text-[rgba(240,232,232,0.7)]">
-              Ticket ID: <span className="font-mono text-[#E8001D] font-medium">#TIC-2026-975</span>
+              Ticket ID: <span className="font-mono text-[#E8001D] font-medium">{ticketId}</span>
             </p>
             <p className="text-[12px] md:text-[13px] text-[rgba(240,232,232,0.6)] mt-1">Laporan Anda sedang ditinjau oleh tim keamanan kami.</p>
           </div>
@@ -108,5 +143,13 @@ export default function SuccesPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function SuccesPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#1A0A0A] flex items-center justify-center text-white">Loading...</div>}>
+      <SuccesContent />
+    </Suspense>
   );
 }

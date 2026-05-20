@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import AdminGuard from "@/components/AdminGuard";
 
 export const metadata: Metadata = {
   title: "EPICCSAFE Admin",
@@ -11,6 +12,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
+    <AdminGuard>
     <div className="min-h-screen bg-[#0F1923] flex">
       {/* Sidebar */}
       <aside className="w-[190px] bg-[#0B1520] border-r border-white/10 min-h-screen fixed left-0 top-0 flex flex-col z-50">
@@ -54,5 +56,6 @@ export default function AdminLayout({
         {children}
       </div>
     </div>
+    </AdminGuard>
   );
 }
