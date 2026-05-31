@@ -36,7 +36,7 @@ export interface ReportStatusResponse {
 }
 
 export type ReportStatus = 'OPEN' | 'IN_REVIEW' | 'RESOLVED'
-export type FinalStatus = 'BLACKLISTED' | 'WHITELISTED' | 'SAFE' | null
+export type FinalStatus = 'BLACKLISTED' | 'WHITELISTED' | 'SAFE' | 'false positive' | 'not phising' | 'phising' | null
 
 export async function submitReport(data: SubmitReportRequest): Promise<SubmitReportResponse> {
   return request<SubmitReportResponse>('/reports/submit', {

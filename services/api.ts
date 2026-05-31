@@ -34,26 +34,32 @@ async function request<T>(endpoint: string, config: RequestConfig = {}): Promise
     if (qs) url += `?${qs}`
   }
 
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 15000)
+
   const fetchOptions: RequestInit = {
     method,
     headers: {
       'Content-Type': 'application/json',
       ...headers,
     },
+    signal: controller.signal,
   }
 
   if (body && method !== 'GET') {
     fetchOptions.body = JSON.stringify(body)
   }
 
-  const res = await fetch(url, fetchOptions)
-
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({ detail: 'Unknown error' }))
-    throw new ApiError(res.status, data.detail || 'Request failed')
+  try {
+    const res = await fetch(url, fetchOptions)
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({ detail: 'Unknown error' }))
+      throw new ApiError(res.status, data.detail || 'Request failed')
+    }
+    return res.json()
+  } finally {
+    clearTimeout(timeoutId)
   }
-
-  return res.json()
 }
 
 function setAuthToken(token: string | null) {

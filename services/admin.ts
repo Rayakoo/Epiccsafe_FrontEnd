@@ -1,4 +1,5 @@
 import { request, authHeaders } from './api'
+import { getCache, setCache } from './cache'
 import type { FinalStatus, ReportStatus } from './reports'
 
 export interface ReportItem {
@@ -10,6 +11,10 @@ export interface ReportItem {
   status: ReportStatus
   final_status: FinalStatus
   source: string
+  age: number | null
+  province: string | null
+  reporter_name: string | null
+  phone_number: string | null
   created_at: string
   updated_at: string
   resolved_at: string | null
@@ -55,11 +60,25 @@ export interface AdminReportsFilterParams {
   date_to?: string
 }
 
+export async function getReportById(id: string): Promise<ReportItem> {
+  const reports = await getReports()
+  const report = reports.find(r => r.id === id)
+  if (!report) throw new Error('Tiket tidak ditemukan')
+  return report
+}
+
 export async function getReports(status?: string): Promise<ReportItem[]> {
-  return request<ReportItem[]>('/admin/reports', {
+  const cacheKey = `reports_${status || 'ALL'}`
+  const cached = getCache<ReportItem[]>(cacheKey)
+  if (cached) return cached
+
+  const data = await request<ReportItem[]>('/admin/reports', {
     headers: authHeaders(),
     params: status ? { status } : undefined,
   })
+
+  setCache(cacheKey, data)
+  return data
 }
 
 export async function getReportsFilter(params: AdminReportsFilterParams): Promise<ReportItem[]> {

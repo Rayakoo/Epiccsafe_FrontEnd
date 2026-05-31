@@ -52,6 +52,7 @@ export type {
 
 export {
   getReports,
+  getReportById,
   getReportsFilter,
   updateReportStatus,
   addToBlacklist,
@@ -67,6 +68,8 @@ export type {
   MessageResponse,
   AdminReportsFilterParams,
 } from './admin'
+
+export { getCache, setCache, clearCache } from './cache'
 
 export { healthCheck } from './health'
 export type { HealthResponse } from './health'
