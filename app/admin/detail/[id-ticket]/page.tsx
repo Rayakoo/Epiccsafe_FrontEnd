@@ -3,7 +3,7 @@
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState, useCallback } from 'react'
 import { getCache, getReportById, getReportLogs, updateReportStatus, addToBlacklist } from '@/services'
-import type { ReportItem, ReportLog } from '@/services'
+import type { ReportItem, ReportLog, FinalStatus } from '@/services'
 import TriageCard from '@/components/detail/TriageCard'
 import AdminActionsCard from '@/components/detail/AdminActionsCard'
 
@@ -100,7 +100,7 @@ export default function DetailTicketPage() {
       await updateReportStatus({
         report_id: ticket.id,
         new_status: newStatus,
-        final_status: finalStatus,
+        final_status: finalStatus as FinalStatus,
         admin_id: getAdminId(),
         note,
       })
