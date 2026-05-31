@@ -72,7 +72,7 @@ export default function ModusPieChart({ reports }: ModusPieChartProps) {
           connectorWidth: 0,
           useHTML: true,
           formatter: function () {
-            const pt = this.point as any
+            const pt = this as any
             return `<span style="color:${pt.color};font-size:11px;font-weight:700">${pt.name} ${Math.round(pt.percentage)}%</span>`
           },
         },
