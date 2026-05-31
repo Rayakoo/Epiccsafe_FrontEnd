@@ -104,7 +104,7 @@ export default function DetailTicketPage() {
         admin_id: getAdminId(),
         note,
       })
-      setTicket(prev => prev ? { ...prev, status: newStatus, final_status: finalStatus } : null)
+      setTicket(prev => prev ? { ...prev, status: newStatus, final_status: finalStatus as FinalStatus } : null)
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Gagal memperbarui status')
     } finally {
