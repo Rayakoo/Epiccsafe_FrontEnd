@@ -40,6 +40,8 @@ function PersonalPage() {
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [evidenceFile, setEvidenceFile] = useState<File | null>(null)
+  const [evidencePreview, setEvidencePreview] = useState<string | null>(null)
 
   function updateField(field: string, value: string) {
     if (field === 'age') {
@@ -297,11 +299,40 @@ function PersonalPage() {
 
                 <div className="flex flex-col gap-2">
                   <label className="text-[12px] md:text-[13px] font-semibold text-[#ECECEC]">Upload Bukti (Opsional)</label>
-                  <div className="border-2 border-dashed border-white/15 rounded-xl bg-[#4A4A4A] p-6 md:p-10 text-center cursor-pointer hover:border-[#E8001D] hover:bg-[rgba(232,0,29,0.05)] transition-all flex flex-col items-center gap-2.5">
-                    <div className="text-[#9A9A9A] text-2xl">⬆</div>
-                    <div className="text-[12px] md:text-[13px] text-[#9A9A9A]">Klik untuk upload atau drag & drop</div>
-                    <div className="text-[11px] md:text-[12px] text-[#9A9A9A] font-mono">PNG, JPG, PDF — Maks. 5MB per file</div>
-                  </div>
+                  <input
+                    type="file"
+                    accept=".jpg,.jpeg,.png"
+                    onChange={e => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+                      setEvidenceFile(file)
+                      setEvidencePreview(URL.createObjectURL(file))
+                    }}
+                    className="hidden"
+                    id="evidence-upload"
+                  />
+                  {evidencePreview ? (
+                    <div className="relative border-2 border-white/15 rounded-xl bg-[#4A4A4A] p-3 overflow-hidden">
+                      <img src={evidencePreview} alt="Preview" className="w-full max-h-48 object-contain rounded-lg" />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEvidenceFile(null)
+                          setEvidencePreview(null)
+                        }}
+                        className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 text-white text-sm flex items-center justify-center cursor-pointer hover:bg-black/80 transition-colors border-none"
+                      >
+                        ✕
+                      </button>
+                      <p className="text-[11px] text-[#9A9A9A] mt-2 text-center font-mono">{evidenceFile?.name}</p>
+                    </div>
+                  ) : (
+                    <label htmlFor="evidence-upload" className="border-2 border-dashed border-white/15 rounded-xl bg-[#4A4A4A] p-6 md:p-10 text-center cursor-pointer hover:border-[#E8001D] hover:bg-[rgba(232,0,29,0.05)] transition-all flex flex-col items-center gap-2.5">
+                      <div className="text-[#9A9A9A] text-2xl">⬆</div>
+                      <div className="text-[12px] md:text-[13px] text-[#9A9A9A]">Klik untuk upload atau drag & drop</div>
+                      <div className="text-[11px] md:text-[12px] text-[#9A9A9A] font-mono">JPG, PNG — Maks. 5MB per file</div>
+                    </label>
+                  )}
                 </div>
 
                 {error && (

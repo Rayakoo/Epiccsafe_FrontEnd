@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState, useCallback } from 'react'
-import { getCache, getReportById, getReportLogs, updateReportStatus, addToBlacklist } from '@/services'
+import { getCache, getReportById, getReportLogs, updateReportStatus, addToBlacklist, broadcastWarning } from '@/services'
 import type { ReportItem, ReportLog, FinalStatus } from '@/services'
 import TriageCard from '@/components/detail/TriageCard'
 import AdminActionsCard from '@/components/detail/AdminActionsCard'
@@ -137,9 +137,26 @@ export default function DetailTicketPage() {
     }
   }, [ticket, actionLoading])
 
-  const handleBroadcastWarning = useCallback(() => {
-    alert('Fitur Broadcast Warning akan segera tersedia')
-  }, [])
+  const handleBroadcastWarning = useCallback(async () => {
+    if (!ticket || !ticket.url || actionLoading) return
+    setActionLoading(true)
+    try {
+      await broadcastWarning({ url: ticket.url, admin_id: getAdminId() })
+      await updateReportStatus({
+        report_id: ticket.id,
+        new_status: 'RESOLVED',
+        final_status: 'phising' as FinalStatus,
+        admin_id: getAdminId(),
+        note: 'Broadcast warning terkirim - Dikonfirmasi phishing',
+      })
+      setTicket(prev => prev ? { ...prev, status: 'RESOLVED', final_status: 'phising' as FinalStatus } : null)
+      alert('Broadcast warning berhasil dikirim dan laporan telah ditutup')
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Gagal mengirim broadcast warning')
+    } finally {
+      setActionLoading(false)
+    }
+  }, [ticket, actionLoading])
 
   const handleMarkResolved = useCallback(() => {
     handleAction('RESOLVED', 'BLACKLISTED', 'Resolved - Email edukasi terkirim')

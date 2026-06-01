@@ -57,6 +57,7 @@ export {
   updateReportStatus,
   addToBlacklist,
   addToWhitelist,
+  broadcastWarning,
   getReportLogs,
 } from './admin'
 export type {
@@ -64,6 +65,7 @@ export type {
   UpdateStatusRequest,
   BlacklistRequest,
   WhitelistRequest,
+  BroadcastWarningRequest,
   ReportLog,
   MessageResponse,
   AdminReportsFilterParams,

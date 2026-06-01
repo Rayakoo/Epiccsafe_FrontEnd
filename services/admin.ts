@@ -38,6 +38,11 @@ export interface WhitelistRequest {
   admin_id: string
 }
 
+export interface BroadcastWarningRequest {
+  url: string
+  admin_id: string
+}
+
 export interface ReportLog {
   id: string
   report_id: string
@@ -106,6 +111,14 @@ export async function addToBlacklist(data: BlacklistRequest): Promise<MessageRes
 
 export async function addToWhitelist(data: WhitelistRequest): Promise<MessageResponse> {
   return request<MessageResponse>('/admin/whitelist', {
+    method: 'POST',
+    headers: authHeaders(),
+    body: data,
+  })
+}
+
+export async function broadcastWarning(data: BroadcastWarningRequest): Promise<MessageResponse> {
+  return request<MessageResponse>('/admin/broadcast', {
     method: 'POST',
     headers: authHeaders(),
     body: data,
