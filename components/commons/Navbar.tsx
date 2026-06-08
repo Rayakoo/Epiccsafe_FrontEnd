@@ -51,11 +51,8 @@ export default function Navbar() {
             href="/login"
             className="flex items-center gap-1.5 no-underline text-white text-[13px] font-semibold px-3 md:px-4 py-1.5 border-2 border-white/25 rounded-full hover:bg-white/10 hover:border-white/40 transition-all"
           >
-            <span className="hidden sm:inline">Admin Login</span>
-            <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0110 0v4"/>
-            </svg>
+            <img src="/logo_gembok.png" alt="" className="w-4 h-4" />
+            <span>Admin Login</span>
           </Link>
 
           <div className="hidden sm:flex items-center bg-white/8 rounded-full px-2 gap-0.5 text-[12px] font-semibold">

@@ -33,16 +33,9 @@ export default function HomepagePage() {
                 <path d="M9 2c0 0-3 3-3 7s3 7 3 7M9 2c0 0 3 3 3 7s-3 7-3 7M2 9h14" stroke="currentColor" strokeWidth="1.5"/>
               </svg>
             </button>
-            <a href="/login" className="flex items-center gap-1 no-underline text-white text-[11px] sm:text-[13px] font-semibold px-3 sm:px-4 py-1 sm:py-1.5 border-2 border-white/50 rounded-full hover:bg-white/10 hover:border-white/70 transition-all whitespace-nowrap">
-              <svg width="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:hidden">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0110 0v4"/>
-              </svg>
-              <span className="hidden sm:inline">Login</span>
-              <svg width="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="hidden sm:block">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0110 0v4"/>
-              </svg>
+            <a href="/login" className="flex items-center gap-1.5 no-underline text-white text-[11px] sm:text-[13px] font-semibold px-3 sm:px-4 py-1 sm:py-1.5 border-2 border-white/50 rounded-full hover:bg-white/10 hover:border-white/70 transition-all whitespace-nowrap">
+              <img src="/logo_gembok.png" alt="" className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span>Login</span>
             </a>
             <div className="flex items-center bg-white/8 rounded-full px-1 sm:px-2 gap-0.5 text-[11px] sm:text-[12px] font-semibold">
               <span className="cursor-pointer px-1.5 sm:px-2 py-1 rounded-full opacity-60 hover:opacity-100 transition-opacity">ID</span>
@@ -92,13 +85,11 @@ export default function HomepagePage() {
             <Card icon="shield-check" title="Sompo Asuransi Travel" />
             <Card icon="home" badge="percent" title="KPR" />
             <Card icon="bar-chart-2" title="Program Reksadana" />
-            <a href="/home" className="col-span-2 sm:col-span-1 sm:col-start-1 bg-[rgba(160,50,50,0.75)] border border-white/15 rounded-2xl flex flex-col items-center justify-center gap-3 md:gap-4 p-5 md:p-7 cursor-pointer hover:bg-[rgba(185,75,75,0.9)] hover:-translate-y-1 transition-all">
-              <div className="w-12 md:w-15 h-12 md:h-15 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5" strokeLinejoin="round" className="w-7 md:w-9">
-                  <path d="M12 2l2 5 5 2-5 2-5-2-5z"/>
-                </svg>
+            <a href="/home" className="bg-[rgba(160,50,50,0.75)] border border-white/15 rounded-2xl flex flex-col items-center justify-center gap-2 md:gap-4 p-3 md:p-7 cursor-pointer hover:bg-[rgba(185,75,75,0.9)] hover:-translate-y-1 transition-all">
+              <div className="w-10 md:w-15 h-10 md:h-15 flex items-center justify-center">
+                <img src="/logo_epicsafe.png" alt="EPICCSAFE" className="w-8 md:w-11" />
               </div>
-              <span className="text-white font-bold text-xs md:text-sm">EPICCSAFE</span>
+              <span className="text-white font-bold text-[10px] md:text-sm text-center leading-tight">EPICCSAFE</span>
             </a>
           </div>
         </section>
@@ -107,32 +98,19 @@ export default function HomepagePage() {
   );
 }
 
-function Card({ icon, badge, title }: { icon: string; badge?: string; title: string }) {
-  const renderIcon = () => {
-    switch(icon) {
-      case "smartphone":
-        return <path d="M7 2h10a2 2 0 012 2v16a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2z M12 18h.01" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/>;
-      case "credit-card":
-        return <><rect x="2" y="5" width="20" height="14" rx="2" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/><path d="M2 10h20" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/></>;
-      case "hand-coins":
-        return <path d="M11 15h2a2 2 0 102-2v-2a2 2 0 10-2 2zm-4-4a4 4 0 014-4h2a4 4 0 010 8h-2" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/>;
-      case "refresh-cw":
-        return <><path d="M3 12a9 9 0 019-9 9.75 9.75 0 016.74 2.74L21 8" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/><path d="M21 3v5h-5" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/></>;
-      case "landmark":
-        return <path d="M3 21h18M3 7v11M21 7v11M6 7v11M9 7v11M12 7v11M15 7v11M18 7v11M3 7h18" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/>;
-      case "credit-card2":
-        return <path d="M2 9h20v10a2 2 0 01-2 2H4a2 2 0 01-2-2V9z M2 11h20" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/>;
-      case "shield-check":
-        return <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/><path d="M9 12l2 2 4-4" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/></>;
-      case "home":
-        return <><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/><path d="M9 22v-8h6v8" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/></>;
-      case "bar-chart-2":
-        return <path d="M18 20V10M12 20V4M6 20v-6" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5"/>;
-      default:
-        return null;
-    }
-  };
+const LOGO_MAP: Record<string, string> = {
+  smartphone: "/logo_aplikasiocto.png",
+  "credit-card": "/logo_kartudebit.png",
+  "hand-coins": "/logo_saversvalas.png",
+  "refresh-cw": "/logo_xtradana.png",
+  landmark: "/logo_ritel.png",
+  "credit-card2": "/logo_mastercard.png",
+  "shield-check": "/logo_asuransi.png",
+  home: "/logo_kpr.png",
+  "bar-chart-2": "/logo_reksadana.png",
+};
 
+function Card({ icon, badge, title }: { icon: string; badge?: string; title: string }) {
   const renderBadge = () => {
     if (!badge) return null;
     if (badge === "dollar-sign") {
@@ -155,9 +133,7 @@ function Card({ icon, badge, title }: { icon: string; badge?: string; title: str
   return (
     <div className="bg-[rgba(160,50,50,0.75)] border border-white/15 rounded-2xl flex flex-col items-center justify-center gap-2 md:gap-4 p-3 md:p-7 cursor-pointer hover:bg-[rgba(185,75,75,0.9)] hover:-translate-y-1 transition-all">
       <div className="w-10 md:w-15 h-10 md:h-15 flex items-center justify-center relative">
-        <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="1.5" className="absolute inset-0 w-8 md:w-11">
-          {renderIcon()}
-        </svg>
+        <img src={LOGO_MAP[icon] || "/logo_epicsafe.png"} alt={title} className="w-8 md:w-11" />
         {renderBadge()}
       </div>
       <span className="text-white font-bold text-[10px] md:text-sm text-center leading-tight">{title}</span>

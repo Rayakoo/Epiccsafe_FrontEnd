@@ -84,7 +84,7 @@ export default function DeteksiPage() {
 
       <main className="max-w-[1100px] mx-auto px-4 md:px-6 py-8 md:py-13 relative">
         {/* Page Header with Back Button */}
-        <a href="/home" className="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl border border-white/15 bg-[#1B2A3B] text-[#E8EDF2] text-[13px] md:text-[14px] font-semibold w-fit hover:bg-[#1E3047] hover:border-white/25 transition-all mb-4 md:mb-6">
+        <a href="/home" className="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5 rounded-xl border border-white/25 bg-transparent text-[#E8EDF2] text-[13px] md:text-[14px] font-semibold w-fit hover:bg-white/5 transition-all mb-4 md:mb-6">
           <svg width="16" viewBox="0 0 16 16" fill="none">
             <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
