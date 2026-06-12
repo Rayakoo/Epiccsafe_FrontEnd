@@ -5,7 +5,7 @@ import { getReports } from '@/services'
 import type { ReportItem } from '@/services'
 
 function formatTimeAgo(dateStr: string): string {
-  const diff = Date.now() - new Date(dateStr).getTime()
+  const diff = Date.now() - (new Date(dateStr).getTime() + 7 * 60 * 60 * 1000)
   const mins = Math.floor(diff / 60000)
   if (mins < 1) return 'baru saja'
   if (mins < 60) return `${mins} mnt lalu`

@@ -116,11 +116,8 @@ function PersonalPage() {
             </svg>
           </button>
           <a href="/login" className="flex items-center gap-1.5 no-underline text-white text-[13px] font-semibold px-3 py-1.5 border-2 border-white/50 rounded-full hover:bg-white/15 transition-colors">
-            <span className="hidden sm:inline">Login</span>
-            <svg width="14" viewBox="0 0 14 14" fill="none">
-              <rect x="1" y="6" width="8" height="7" rx="1" stroke="currentColor" strokeWidth="1.3"/>
-              <path d="M4 6V4a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.3"/>
-            </svg>
+            <img src="/logo_gembok.png" alt="" className="w-4 h-4" />
+            <span>Login</span>
           </a>
           <div className="hidden sm:flex items-center gap-0.5 border-2 border-white/40 rounded-full px-2 py-1 text-[12.5px] font-semibold">
             <span className="cursor-pointer px-1 py-0.5 rounded-full bg-white/20 text-white">ID</span>
@@ -185,7 +182,7 @@ function PersonalPage() {
           {/* Right Column - Form Card */}
           <div className="bg-[#2C2C2C] border-none rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4)] animate-fadeUp [animation-delay:0.15s] order-1 lg:order-2">
             <div className="bg-[#5C0000] px-5 md:px-7 py-4 md:py-5.5">
-              <div className="font-mono text-lg font-semibold tracking-[2px] text-white">EPICCSAFE</div>
+              <img src="/logo_tulisanepiccsafe_putih.png" alt="EPICCSAFE" className="h-10 md:h-12" />
               <p className="text-[12px] md:text-[13px] text-white/70 mt-1">Form Pelaporan Phishing & Fraud — CIMB Niaga</p>
             </div>
             <form onSubmit={handleSubmit} className="p-5 md:p-7 flex flex-col gap-4 md:gap-4.5">

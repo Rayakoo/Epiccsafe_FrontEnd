@@ -34,7 +34,7 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile header bar */}
+      {/* Header bar */}
       <div className="md:hidden flex items-center h-12 bg-[#0B1520] border-b border-white/10 px-3 gap-3 sticky top-0 z-40">
         <button
           onClick={() => setOpen(!open)}
@@ -50,7 +50,7 @@ export default function Sidebar() {
             )}
           </svg>
         </button>
-        <span className="text-white font-bold text-sm">EPICCSAFE Admin</span>
+        <img src="/logo_tulisanepiccsafe_putih.png" alt="EPICCSAFE" className="h-5" />
       </div>
 
       {/* Overlay */}
@@ -69,7 +69,7 @@ export default function Sidebar() {
       >
         <div className="bg-[#E8001D] p-4">
           <div className="text-white font-extrabold text-[13px] leading-tight">
-            EPICCSAFE Admin
+            <img src="/logo_tulisanepiccsafe_putih.png" alt="EPICCSAFE" className="h-5" />
           </div>
           <div className="text-white/70 text-[10px] mt-1">
             Security Team — CIMB Niaga

@@ -1,4 +1,4 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://foo.rafiananta.my.id'
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://epicsafe-1.noryy.app'
 
 interface RequestConfig {
   method?: string

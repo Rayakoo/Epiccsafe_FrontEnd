@@ -64,7 +64,7 @@ function computeStats(reports: ReportItem[]): DashboardStats {
 }
 
 function formatTimeAgo(dateStr: string): string {
-  const diff = Date.now() - new Date(dateStr).getTime()
+  const diff = Date.now() - (new Date(dateStr).getTime() + 7 * 60 * 60 * 1000)
   const mins = Math.floor(diff / 60000)
   if (mins < 1) return 'baru saja'
   if (mins < 60) return `${mins} mnt lalu`
@@ -161,8 +161,11 @@ export default function DashboardPage() {
   return (
     <div className="flex-1 flex flex-col min-w-0">
       {/* Topbar */}
-      <header className="h-14 bg-[#162030] border-b border-white/10 sticky top-0 z-40 flex items-center justify-between px-4 md:px-7">
+      <header className="h-14 bg-[#162030] border-b border-white/10 sticky top-0 z-40 flex items-center justify-between px-4 md:px-8">
         <h1 className="text-[15px] md:text-[17px] font-bold text-[#E8EDF2]">Dashboard</h1>
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="w-8.5 h-8.5 rounded-full bg-[#E8001D] flex items-center justify-center text-white text-sm font-bold">A</div>
+        </div>
       </header>
 
       <main className="flex-1 p-4 md:p-6 flex flex-col gap-4 md:gap-4.5 min-w-0">

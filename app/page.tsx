@@ -76,10 +76,10 @@ export default function HomepagePage() {
         {/* Right: Cards Grid */}
         <section className="w-full md:flex-1 max-w-[580px] animate-fadeIn [animation-delay:0.15s]">
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 md:gap-3.5">
-            <Card icon="smartphone" badge="dollar-sign" title="Aplikasi OCTO" />
+            <Card icon="smartphone" title="Aplikasi OCTO" />
             <Card icon="credit-card" title="Fitur Kartu Debit" />
             <Card icon="hand-coins" title="Xtra Savers Valas" />
-            <Card icon="refresh-cw" badge="dollar-sign" title="Xtra Dana" />
+            <Card icon="refresh-cw" title="Xtra Dana" />
             <Card icon="landmark" title="SBN Ritel 2026" />
             <Card icon="credit-card2" title="Mastercard Platinum" />
             <Card icon="shield-check" title="Sompo Asuransi Travel" />

@@ -1,11 +1,20 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { getCache, getReportById, getReportLogs, updateReportStatus, addToBlacklist, broadcastWarning } from '@/services'
 import type { ReportItem, ReportLog, FinalStatus } from '@/services'
 import TriageCard from '@/components/detail/TriageCard'
 import AdminActionsCard from '@/components/detail/AdminActionsCard'
+
+function formatRemaining(ms: number): string {
+  if (ms <= 0) return '0 menit'
+  const totalMins = Math.floor(ms / 60000)
+  const h = Math.floor(totalMins / 60)
+  const m = totalMins % 60
+  if (h > 0) return `${h} jam ${m} menit`
+  return `${m} menit`
+}
 
 function getScoreColor(score: number): string {
   if (score >= 75) return 'text-[#E8001D]'
@@ -51,6 +60,9 @@ export default function DetailTicketPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [actionLoading, setActionLoading] = useState(false)
+  const [remaining, setRemaining] = useState<number>(0)
+  const [inReviewTime, setInReviewTime] = useState<number | null>(null)
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
     if (!idTicket) return
@@ -89,6 +101,28 @@ export default function DetailTicketPage() {
     return () => { cancelled = true }
   }, [idTicket])
 
+  useEffect(() => {
+    if (ticket?.status !== 'IN_REVIEW') {
+      if (timerRef.current) clearInterval(timerRef.current)
+      setRemaining(0)
+      setInReviewTime(null)
+      return
+    }
+    const reviewLog = logs.find(l => l.new_status === 'IN_REVIEW')
+    if (!reviewLog) return
+    const start = new Date(reviewLog.created_at).getTime() + 7 * 60 * 60 * 1000
+    setInReviewTime(start)
+
+    function tick() {
+      const now = Date.now()
+      const deadline = start + 2 * 60 * 60 * 1000
+      setRemaining(Math.max(0, deadline - now))
+    }
+    tick()
+    timerRef.current = setInterval(tick, 1000)
+    return () => { if (timerRef.current) clearInterval(timerRef.current) }
+  }, [ticket?.status, logs])
+
   const handleAction = useCallback(async (
     newStatus: 'IN_REVIEW' | 'RESOLVED',
     finalStatus: string | null,
@@ -104,7 +138,7 @@ export default function DetailTicketPage() {
         admin_id: getAdminId(),
         note,
       })
-      setTicket(prev => prev ? { ...prev, status: newStatus, final_status: finalStatus as FinalStatus } : null)
+      window.location.reload()
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Gagal memperbarui status')
     } finally {
@@ -336,22 +370,49 @@ export default function DetailTicketPage() {
           {/* Right Column */}
           <div className="flex flex-col gap-4 order-1 lg:order-2">
             {/* SLA Card */}
-            <div className="bg-[#1B2A3B] border border-white/10 rounded-xl md:rounded-2xl p-4 md:p-5.5">
-              <div className="flex items-center justify-between mb-1">
-                <h3 className="text-[15px] md:text-[16px] font-extrabold text-[#E8EDF2]">SLA</h3>
-                <span className="font-mono text-[13px] md:text-[14px] font-semibold text-[#E8EDF2]">-</span>
+            {ticket.status !== 'OPEN' && (
+              <div className="bg-[#1B2A3B] border border-white/10 rounded-xl md:rounded-2xl p-4 md:p-5.5">
+                <div className="flex items-center justify-between mb-1">
+                  <h3 className="text-[15px] md:text-[16px] font-extrabold text-[#E8EDF2]">SLA</h3>
+                  {ticket.status === 'IN_REVIEW' ? (
+                    <span className={`font-mono text-[13px] md:text-[14px] font-semibold ${remaining > 0 ? 'text-[#F5A623]' : 'text-[#E8001D]'}`}>
+                      {remaining > 0 ? formatRemaining(remaining) : 'TERLAMBAT'}
+                    </span>
+                  ) : (
+                    <span className="font-mono text-[13px] md:text-[14px] font-semibold text-[#4CAF50]">Selesai</span>
+                  )}
+                </div>
+                <p className="text-[11px] md:text-[11.5px] text-[#6B7E93] mb-2 md:mb-2.5">Sisa waktu</p>
+                {ticket.status === 'IN_REVIEW' && inReviewTime && (
+                  <>
+                    <div className="w-full h-2 md:h-2.5 bg-white/10 rounded-full overflow-hidden mb-2">
+                      <div
+                        className="h-full rounded-full bg-gradient-to-r from-[#F5A623] to-[#E8001D] transition-all duration-1000"
+                        style={{ width: `${Math.max(0, Math.min(100, (remaining / (2 * 60 * 60 * 1000)) * 100))}%` }}
+                      />
+                    </div>
+                    <p className="text-[11px] md:text-[12px] text-[#6B7E93]">Target: 2 jam sejak ditetapkan In Review</p>
+                  </>
+                )}
+                {ticket.status === 'RESOLVED' && (
+                  <p className="text-[11px] md:text-[12px] text-[#6B7E93]">Target: 2 jam</p>
+                )}
               </div>
-              <p className="text-[11px] md:text-[11.5px] text-[#6B7E93] mb-2 md:mb-2.5">Sisa waktu</p>
-              <div className="w-full h-2 md:h-2.5 bg-white/10 rounded-full overflow-hidden mb-2">
-                <div className="h-full rounded-full bg-gradient-to-r from-[#F5A623] to-[#E8001D] w-[68%] transition-all duration-1000" />
-              </div>
-              <p className="text-[11px] md:text-[12px] text-[#6B7E93]">Target: 2 jam</p>
-            </div>
+            )}
 
             {/* Audit Trail */}
             <div className="bg-[#1B2A3B] border border-white/10 rounded-xl md:rounded-2xl p-4 md:p-5.5">
               <h3 className="text-[15px] md:text-[16px] font-extrabold text-[#E8EDF2] mb-3 md:mb-4">Audit Trail</h3>
               <div className="flex flex-col gap-3 md:gap-4">
+                {ticket && (
+                  <div className="flex items-start gap-3">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#2196F3] shadow-[0_0_6px_#2196F3] flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-[12.5px] md:text-[13.5px] font-bold text-[#E8EDF2] mb-0.5">Ticket dibuat</p>
+                      <p className="text-[11px] md:text-[12px] text-[#6B7E93]">{new Date(new Date(ticket.created_at).getTime() + 7 * 60 * 60 * 1000).toLocaleString('id-ID')}</p>
+                    </div>
+                  </div>
+                )}
                 {logs.length === 0 ? (
                   <p className="text-[12.5px] text-[#6B7E93]">Belum ada aktivitas</p>
                 ) : (

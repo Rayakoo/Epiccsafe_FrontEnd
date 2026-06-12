@@ -86,11 +86,8 @@ export default function StatusPage() {
               </svg>
             </button>
             <a href="/login" className="flex items-center gap-1.5 no-underline text-white text-[13px] font-semibold px-3 md:px-4 py-1.5 border-2 border-white/25 rounded-full hover:bg-white/10 hover:border-white/40 transition-all">
-              <span className="hidden sm:inline">Login</span>
-              <svg width="14" viewBox="0 0 14 14" fill="none">
-                <rect x="1" y="6" width="8" height="7" rx="1" stroke="currentColor" strokeWidth="1.3"/>
-                <path d="M4 6V4a3 3 0 016 0v2" stroke="currentColor" strokeWidth="1.3"/>
-              </svg>
+              <img src="/logo_gembok.png" alt="" className="w-4 h-4" />
+              <span>Login</span>
             </a>
             <div className="hidden sm:flex items-center bg-white/8 rounded-full px-3 py-1 gap-2 text-[12px] font-semibold">
               <span className="cursor-pointer px-2 py-1 rounded-full bg-white/15 text-white">ID</span>
